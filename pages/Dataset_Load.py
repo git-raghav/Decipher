@@ -34,7 +34,7 @@ def show():
             st.info("No datasets available. Upload a new dataset below.")
 
     # Main content
-    st.subheader("Upload New Dataset")
+    st.subheader("Upload New Preprocessed Dataset")
 
     # File uploader
     uploaded_file = st.file_uploader("Upload CSV File", type=["csv"])

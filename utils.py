@@ -53,17 +53,26 @@ def train_and_save_model(df, target_column, model_name, test_size=0.2, random_st
     elif hasattr(model, 'coef_'):
         feature_importance = np.abs(model.coef_[0])
 
-    # Save model
+    # Save model and feature names
     models_dir = Path("models")
     models_dir.mkdir(exist_ok=True)
     model_filename = f"models/{model_name.replace(' ', '_')}_{random_state}.pkl"
-    joblib.dump(model, model_filename)
+
+    # Create a dictionary containing both the model and feature names
+    model_data = {
+        'model': model,
+        'feature_names': X.columns.tolist(),
+        'target_column': target_column
+    }
+
+    joblib.dump(model_data, model_filename)
 
     return accuracy, model_filename, y_test, y_pred, feature_importance
 
 def load_model(model_path):
     """Load a trained model from disk."""
-    return joblib.load(model_path)
+    model_data = joblib.load(model_path)
+    return model_data['model']
 
 def predict(model, df):
     """Make predictions using a trained model."""
@@ -71,11 +80,17 @@ def predict(model, df):
 
 def get_model_info(model_path):
     """Get information about a trained model."""
-    model = load_model(model_path)
+    model_data = joblib.load(model_path)
+    model = model_data['model']
+    feature_names = model_data['feature_names']
+    target_column = model_data['target_column']
+
     info = {
         "type": type(model).__name__,
         "parameters": model.get_params(),
-        "feature_importance": None
+        "feature_importance": None,
+        "feature_names": feature_names,
+        "target_column": target_column
     }
 
     if hasattr(model, 'feature_importances_'):
