@@ -3,9 +3,6 @@ import streamlit as st
 def show():
     st.title("ML Model Trainer & Analyzer")
 
-    # Add a logo or header image
-    st.image("https://raw.githubusercontent.com/streamlit/streamlit/develop/docs/images/streamlit-mark-color.png", width=100)
-
     st.markdown("""
     ## Welcome to ML Model Trainer & Analyzer
 
