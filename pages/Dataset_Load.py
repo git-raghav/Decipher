@@ -68,7 +68,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"Dataset saved successfully as {filename}")
-                st.session_state.refresh = True
+                st.rerun()
 
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")
@@ -89,7 +89,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"{name} dataset loaded and saved successfully!")
-                st.session_state.refresh = True
+                st.rerun()
             except Exception as e:
                 st.error(f"Error loading {name} dataset: {str(e)}")
 
@@ -107,11 +107,6 @@ def show():
                     try:
                         os.remove(dataset)
                         st.success(f"Deleted {dataset.name}")
-                        st.session_state.refresh = True
+                        st.rerun()
                     except Exception as e:
                         st.error(f"Error deleting {dataset.name}: {str(e)}")
-
-    # Handle refresh
-    if st.session_state.refresh:
-        st.session_state.refresh = False
-        st.experimental_rerun()
