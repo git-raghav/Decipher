@@ -14,11 +14,15 @@ st.set_page_config(
     }
 )
 
-# Hide the default Streamlit menu
+# Hide the default Streamlit menu and other elements
 hide_menu_style = """
         <style>
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
+        header {visibility: hidden;}
+        .stDeployButton {display: none;}
+        .stToolbar {display: none;}
+        .stStatusWidget {display: none;}
         </style>
         """
 st.markdown(hide_menu_style, unsafe_allow_html=True)
