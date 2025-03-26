@@ -4,15 +4,13 @@ import shap
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
-from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset, ClassificationPreset, DataQualityPreset
-from evidently.dashboard import Dashboard
-from evidently.dashboard.tabs import DataDriftTab, CatTargetDriftTab, ClassificationPerformanceTab
 from utils import load_model, get_model_info
 import os
 from pathlib import Path
 import numpy as np
 import seaborn as sns
+from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
+from scipy import stats
 
 def show():
     st.title("Model Visualization & Monitoring")
@@ -93,26 +91,17 @@ def show():
         except Exception as e:
             st.warning(f"Could not compute SHAP values: {str(e)}")
 
-        # Data Quality Report
-        st.subheader("Data Quality Report")
-        data_quality_report = Report(metrics=[DataQualityPreset()])
-        data_quality_report.run(reference_data=df)
-        st.write(data_quality_report.show(mode="inline"))
-
-        # Data Drift Report
-        st.subheader("Data Drift Report")
-        drift_report = Report(metrics=[DataDriftPreset()])
-        drift_report.run(reference_data=df.sample(frac=0.5), current_data=df)
-        st.write(drift_report.show(mode="inline"))
-
-        # Classification Performance Report
-        st.subheader("Classification Performance Report")
-        y_pred = model.predict(df.drop(columns=[df.columns[-1]]))
-        y_true = df[df.columns[-1]]
-
-        performance_report = Report(metrics=[ClassificationPreset()])
-        performance_report.run(reference_data=df, current_data=df)
-        st.write(performance_report.show(mode="inline"))
+        # Data Quality Analysis
+        st.subheader("Data Quality Analysis")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("Missing Values:")
+            missing_values = df.isnull().sum()
+            fig = px.bar(x=missing_values.index, y=missing_values.values)
+            st.plotly_chart(fig)
+        with col2:
+            st.write("Data Types:")
+            st.write(df.dtypes)
 
         # Feature Distributions
         st.subheader("Feature Distributions")
@@ -128,7 +117,10 @@ def show():
 
         # Model Performance Metrics
         st.subheader("Model Performance Metrics")
-        from sklearn.metrics import classification_report, confusion_matrix
+        y_pred = model.predict(df.drop(columns=[df.columns[-1]]))
+        y_true = df[df.columns[-1]]
+
+        # Classification Report
         report = classification_report(y_true, y_pred)
         st.text(report)
 
@@ -137,3 +129,26 @@ def show():
         fig, ax = plt.subplots(figsize=(8, 6))
         sns.heatmap(cm, annot=True, fmt='d', ax=ax)
         st.pyplot(fig)
+
+        # ROC Curve (if applicable)
+        try:
+            y_pred_proba = model.predict_proba(df.drop(columns=[df.columns[-1]]))[:, 1]
+            fpr, tpr, _ = roc_curve(y_true, y_pred_proba)
+            roc_auc = auc(fpr, tpr)
+
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=fpr, y=tpr, mode='lines', name=f'ROC curve (AUC = {roc_auc:.2f})'))
+            fig.add_trace(go.Scatter(x=[0, 1], y=[0, 1], mode='lines', name='Random'))
+            fig.update_layout(title='ROC Curve', xaxis_title='False Positive Rate', yaxis_title='True Positive Rate')
+            st.plotly_chart(fig)
+        except Exception as e:
+            st.warning(f"Could not generate ROC curve: {str(e)}")
+
+        # Statistical Tests
+        st.subheader("Statistical Analysis")
+        for column in df.columns[:-1]:
+            if df[column].dtype in ['int64', 'float64']:
+                # Perform t-test between feature and target
+                t_stat, p_value = stats.ttest_ind(df[df[df.columns[-1]] == 0][column],
+                                                df[df[df.columns[-1]] == 1][column])
+                st.write(f"{column}: t-statistic = {t_stat:.4f}, p-value = {p_value:.4f}")
