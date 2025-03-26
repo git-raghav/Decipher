@@ -64,9 +64,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"Dataset saved successfully as {filename}")
-
-                # Refresh the page to show the new dataset
-                st.experimental_rerun()
+                st.rerun()
 
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")
@@ -75,8 +73,8 @@ def show():
     st.subheader("Sample Datasets")
     sample_datasets = {
         "Titanic": "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv",
-        "Iris": "https://raw.githubusercontent.com/datasciencedojo/datasets/master/iris.csv",
-        "Mushrooms": "https://raw.githubusercontent.com/datasciencedojo/datasets/master/mushrooms.csv"
+        "Iris": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv",
+        "Mushrooms": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/mushrooms.csv"
     }
 
     for name, url in sample_datasets.items():
@@ -87,7 +85,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"{name} dataset loaded and saved successfully!")
-                st.experimental_rerun()
+                st.rerun()
             except Exception as e:
                 st.error(f"Error loading {name} dataset: {str(e)}")
 
@@ -105,6 +103,6 @@ def show():
                     try:
                         os.remove(dataset)
                         st.success(f"Deleted {dataset.name}")
-                        st.experimental_rerun()
+                        st.rerun()
                     except Exception as e:
                         st.error(f"Error deleting {dataset.name}: {str(e)}")
