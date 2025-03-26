@@ -15,7 +15,7 @@ if "page" not in st.session_state:
 
 # Sidebar navigation
 with st.sidebar:
-    st.title("🤖 ML Trainer & Analyzer")
+    st.title("🤖 Decipher")
     st.markdown("---")
 
     # Navigation

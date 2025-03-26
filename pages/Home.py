@@ -1,7 +1,7 @@
 import streamlit as st
 
 def show():
-    st.title("ML Model Trainer & Analyzer")
+    st.title("Decipher")
 
     st.markdown("""
     ## Welcome to ML Model Trainer & Analyzer
