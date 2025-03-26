@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 
 def show():
+    # Initialize session state for refresh
+    if 'refresh' not in st.session_state:
+        st.session_state.refresh = False
+
     st.title("Dataset Management")
 
     # Create datasets directory if it doesn't exist
@@ -64,7 +68,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"Dataset saved successfully as {filename}")
-                st.rerun()
+                st.session_state.refresh = True
 
         except Exception as e:
             st.error(f"Error processing file: {str(e)}")
@@ -85,7 +89,7 @@ def show():
                 filepath = datasets_dir / filename
                 df.to_csv(filepath, index=False)
                 st.success(f"{name} dataset loaded and saved successfully!")
-                st.rerun()
+                st.session_state.refresh = True
             except Exception as e:
                 st.error(f"Error loading {name} dataset: {str(e)}")
 
@@ -103,6 +107,11 @@ def show():
                     try:
                         os.remove(dataset)
                         st.success(f"Deleted {dataset.name}")
-                        st.rerun()
+                        st.session_state.refresh = True
                     except Exception as e:
                         st.error(f"Error deleting {dataset.name}: {str(e)}")
+
+    # Handle refresh
+    if st.session_state.refresh:
+        st.session_state.refresh = False
+        st.experimental_rerun()
