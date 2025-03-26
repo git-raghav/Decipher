@@ -77,8 +77,7 @@ def show():
     st.subheader("Sample Datasets")
     sample_datasets = {
         "Titanic": "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv",
-        "Iris": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv",
-        "Mushrooms": "https://raw.githubusercontent.com/datasets/mushroom-classification/master/mushrooms.csv"
+        "Iris": "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
     }
 
     for name, url in sample_datasets.items():
