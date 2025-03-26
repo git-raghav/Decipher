@@ -6,26 +6,8 @@ st.set_page_config(
     page_title="ML Model Trainer & Analyzer",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'Get Help': None,
-        'Report a bug': None,
-        'About': None
-    }
+    initial_sidebar_state="expanded"
 )
-
-# Hide the default Streamlit menu and other elements
-hide_menu_style = """
-        <style>
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
-        .stDeployButton {display: none;}
-        .stToolbar {display: none;}
-        .stStatusWidget {display: none;}
-        </style>
-        """
-st.markdown(hide_menu_style, unsafe_allow_html=True)
 
 # Set Home as the default landing page
 if "page" not in st.session_state:
