@@ -35,14 +35,14 @@ def show():
     #### 📈 Visualization & Analysis
     - Comprehensive model performance metrics
     - SHAP values for feature importance
-    - Evidently AI for model monitoring
-    - Data drift detection
+    - Data quality analysis
+    - Statistical analysis
     - Interactive visualizations
 
     ### Getting Started:
     1. Go to the "Dataset Load" page to upload or select a dataset
     2. Navigate to "Train Models" to train your ML models
-    3. Use "Predictions" to make predictions on new data
+    3. Use "Upload & Predict" to make predictions on new data
     4. Visit "Visualization" for detailed model analysis
 
     """)
