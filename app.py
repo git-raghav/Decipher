@@ -3,7 +3,7 @@ from pages import Home, Dataset_Load, Train_Models, Upload_Predict, Visualizatio
 
 # Set page config
 st.set_page_config(
-    page_title="ML Model Trainer & Analyzer",
+    page_title="Decipher",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
